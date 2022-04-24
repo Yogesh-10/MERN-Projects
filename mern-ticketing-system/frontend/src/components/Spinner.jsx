@@ -3,7 +3,7 @@ function Spinner() {
     <div className='loadingSpinnerContainer'>
       <div className='loadingSpipnner'></div>
     </div>
-  )
+  );
 }
 
-export default Spinner
+export default Spinner;

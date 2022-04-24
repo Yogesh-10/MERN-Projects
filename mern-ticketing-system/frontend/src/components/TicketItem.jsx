@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 function TicketItem({ ticket }) {
   return (
@@ -10,7 +10,7 @@ function TicketItem({ ticket }) {
         View
       </Link>
     </div>
-  )
+  );
 }
 
-export default TicketItem
+export default TicketItem;

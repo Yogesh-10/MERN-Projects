@@ -1,7 +1,7 @@
-import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux';
 
 function NoteItem({ note }) {
-  const { user } = useSelector((state) => state.auth)
+  const { user } = useSelector((state) => state.auth);
 
   return (
     <div
@@ -19,7 +19,7 @@ function NoteItem({ note }) {
         {new Date(note.createdAt).toLocaleString('en-US')}
       </div>
     </div>
-  )
+  );
 }
 
-export default NoteItem
+export default NoteItem;
