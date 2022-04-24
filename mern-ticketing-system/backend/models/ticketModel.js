@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const ticketSchema = mongoose.Schema(
   {
@@ -26,6 +26,6 @@ const ticketSchema = mongoose.Schema(
   {
     timestamps: true,
   }
-)
+);
 
-module.exports = mongoose.model('Ticket', ticketSchema)
+module.exports = mongoose.model('Ticket', ticketSchema);
