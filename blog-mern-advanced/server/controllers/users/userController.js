@@ -243,6 +243,46 @@ const unfollowUser = expressAsyncHandler(async (req, res) => {
   res.json('You have successfully unfollowed this user');
 });
 
+/*
+@Author - Yogesh
+@Desc   - Block User
+@Route  - PUT/api/users/block-user
+@Access - Private
+*/
+const blockUser = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  validateMongodbId(id);
+
+  const user = await User.findByIdAndUpdate(
+    id,
+    {
+      isBlocked: true,
+    },
+    { new: true }
+  );
+  res.json(user);
+});
+
+/*
+@Author - Yogesh
+@Desc   - UnBlock User
+@Route  - PUT/api/users/unblock-user
+@Access - Private
+*/
+const unBlockUser = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  validateMongodbId(id);
+
+  const user = await User.findByIdAndUpdate(
+    id,
+    {
+      isBlocked: false,
+    },
+    { new: true }
+  );
+  res.json(user);
+});
+
 module.exports = {
   registerUser,
   loginUser,
@@ -254,4 +294,6 @@ module.exports = {
   updateUserPassword,
   followUser,
   unfollowUser,
+  blockUser,
+  unBlockUser,
 };
