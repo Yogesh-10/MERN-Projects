@@ -8,6 +8,8 @@ const {
   userProfile,
   updateUser,
   updateUserPassword,
+  followUser,
+  unfollowUser,
 } = require('../../controllers/users/userController');
 const authMiddleware = require('../../middlewares/auth/authMiddleware');
 
@@ -17,12 +19,14 @@ userRoutes.post('/register', registerUser);
 userRoutes.post('/login', loginUser);
 
 userRoutes.get('/', authMiddleware, getUsers);
-userRoutes.get('/:id', fetchUserDetails);
-userRoutes.get('/profile/:id', authMiddleware, userProfile);
-
 userRoutes.put('/password', authMiddleware, updateUserPassword);
-userRoutes.put('/:id', authMiddleware, updateUser);
 
+userRoutes.put('/follow', authMiddleware, followUser);
+userRoutes.put('/unfollow', authMiddleware, unfollowUser);
+
+userRoutes.get('/profile/:id', authMiddleware, userProfile);
+userRoutes.put('/:id', authMiddleware, updateUser);
 userRoutes.delete('/:id', authMiddleware, deleteUser);
+userRoutes.get('/:id', fetchUserDetails);
 
 module.exports = userRoutes;
