@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const expressAsyncHandler = require('express-async-handler');
 const generateToken = require('../../config/token/generateToken');
@@ -284,25 +285,61 @@ const unBlockUser = expressAsyncHandler(async (req, res) => {
   res.json(user);
 });
 
-const sendEmail = expressAsyncHandler(async (req, res) => {
-  console.log(req.user);
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
-    auth: {
-      user: process.env.ETHEREAL_USER,
-      pass: process.env.ETHEREAL_PASS,
-    },
-  });
+const generateVerificationToken = expressAsyncHandler(async (req, res) => {
+  const loginUserId = req.user.id;
 
-  transporter.sendMail({
-    from: '"Blog-MERN-Advanced" <blog-mern-advanced@gmail.com>', // sender address
-    to: 'allan.ankunding97@ethereal.email',
-    subject: 'My first Node js email sending',
-    text: 'Hey check me out for this email',
-  });
+  const user = await User.findById(loginUserId);
 
-  res.json('Email sent');
+  try {
+    //Generate token
+    const verificationToken = await user.createAccountVerificationToken();
+    await user.save();
+
+    const resetURL = `If you were requested to verify your account, verify now within 10 minutes, otherwise ignore this message <a href="http://localhost:3000/verify-account/${verificationToken}">Click to verify your account</a>`;
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.ethereal.email',
+      port: 587,
+      auth: {
+        user: process.env.ETHEREAL_USER,
+        pass: process.env.ETHEREAL_PASS,
+      },
+    });
+
+    transporter.sendMail({
+      from: '"Blog-MERN-Advanced" <blog-mern-advanced@gmail.com>', // sender address
+      to: 'allan.ankunding97@ethereal.email',
+      subject: 'My first Node js email sending',
+      html: resetURL,
+    });
+
+    res.json(resetURL);
+  } catch (error) {
+    res.json(error);
+  }
+});
+
+//------------------------------
+//Account verification
+//------------------------------
+
+const accountVerification = expressAsyncHandler(async (req, res) => {
+  const { token } = req.body;
+  console.log(token);
+  const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+  //find this user by token
+
+  const userFound = await User.findOne({
+    accountVerificationToken: hashedToken,
+    accountVerificationTokenExpires: { $gt: new Date() },
+  });
+  if (!userFound) throw new Error('Token expired, try again later');
+  //update the proprt to true
+  userFound.isAccountVerified = true;
+  userFound.accountVerificationToken = undefined;
+  userFound.accountVerificationTokenExpires = undefined;
+  await userFound.save();
+  res.json(userFound);
 });
 
 module.exports = {
@@ -318,5 +355,6 @@ module.exports = {
   unfollowUser,
   blockUser,
   unBlockUser,
-  sendEmail,
+  generateVerificationToken,
+  accountVerification,
 };

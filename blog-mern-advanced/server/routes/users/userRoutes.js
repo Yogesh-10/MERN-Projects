@@ -12,26 +12,33 @@ const {
   unfollowUser,
   blockUser,
   unBlockUser,
-  sendEmail,
+  generateVerificationToken,
+  accountVerification,
 } = require('../../controllers/users/userController');
 const authMiddleware = require('../../middlewares/auth/authMiddleware');
 
 const userRoutes = express.Router();
 
-userRoutes.get('/', authMiddleware, getUsers);
-userRoutes.get('/:id', fetchUserDetails);
-userRoutes.put('/:id', authMiddleware, updateUser);
-userRoutes.delete('/:id', authMiddleware, deleteUser);
+userRoutes.post(
+  '/generate-verify-email-token',
+  authMiddleware,
+  generateVerificationToken
+);
+userRoutes.put('/verify-account', authMiddleware, accountVerification);
+
+userRoutes.put('/block-user/:id', authMiddleware, blockUser);
+userRoutes.put('/unblock-user/:id', authMiddleware, unBlockUser);
+userRoutes.get('/profile/:id', authMiddleware, userProfile);
 
 userRoutes.post('/register', registerUser);
 userRoutes.post('/login', loginUser);
 userRoutes.put('/password', authMiddleware, updateUserPassword);
 userRoutes.put('/follow', authMiddleware, followUser);
 userRoutes.put('/unfollow', authMiddleware, unfollowUser);
-userRoutes.post('/send-email', authMiddleware, sendEmail);
 
-userRoutes.put('/block-user/:id', authMiddleware, blockUser);
-userRoutes.put('/unblock-user/:id', authMiddleware, unBlockUser);
-userRoutes.get('/profile/:id', authMiddleware, userProfile);
+userRoutes.get('/:id', fetchUserDetails);
+userRoutes.put('/:id', authMiddleware, updateUser);
+userRoutes.delete('/:id', authMiddleware, deleteUser);
+userRoutes.get('/', authMiddleware, getUsers);
 
 module.exports = userRoutes;
