@@ -1,3 +1,4 @@
+const nodemailer = require('nodemailer');
 const expressAsyncHandler = require('express-async-handler');
 const generateToken = require('../../config/token/generateToken');
 const User = require('../../models/user/UserModel');
@@ -283,6 +284,27 @@ const unBlockUser = expressAsyncHandler(async (req, res) => {
   res.json(user);
 });
 
+const sendEmail = expressAsyncHandler(async (req, res) => {
+  console.log(req.user);
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.ethereal.email',
+    port: 587,
+    auth: {
+      user: process.env.ETHEREAL_USER,
+      pass: process.env.ETHEREAL_PASS,
+    },
+  });
+
+  transporter.sendMail({
+    from: '"Blog-MERN-Advanced" <blog-mern-advanced@gmail.com>', // sender address
+    to: 'allan.ankunding97@ethereal.email',
+    subject: 'My first Node js email sending',
+    text: 'Hey check me out for this email',
+  });
+
+  res.json('Email sent');
+});
+
 module.exports = {
   registerUser,
   loginUser,
@@ -296,4 +318,5 @@ module.exports = {
   unfollowUser,
   blockUser,
   unBlockUser,
+  sendEmail,
 };
