@@ -16,8 +16,13 @@ const {
   accountVerification,
   forgotPasswordToken,
   passwordReset,
+  profilePhotoUploadController,
 } = require('../../controllers/users/userController');
 const authMiddleware = require('../../middlewares/auth/authMiddleware');
+const {
+  profilePhotoUpload,
+  profilePhotoResize,
+} = require('../../middlewares/uploads/profilePhotoUpload');
 
 const userRoutes = express.Router();
 
@@ -25,6 +30,13 @@ userRoutes.post(
   '/generate-verify-email-token',
   authMiddleware,
   generateVerificationToken
+);
+userRoutes.put(
+  '/profilephoto-upload',
+  authMiddleware,
+  profilePhotoUpload.single('image'),
+  profilePhotoResize,
+  profilePhotoUploadController
 );
 userRoutes.put('/verify-account', authMiddleware, accountVerification);
 

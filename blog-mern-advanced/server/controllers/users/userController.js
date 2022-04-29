@@ -432,6 +432,29 @@ const passwordReset = expressAsyncHandler(async (req, res) => {
   res.json(user);
 });
 
+//------------------------------
+//Profile photo upload
+//------------------------------
+
+const profilePhotoUploadController = expressAsyncHandler(async (req, res) => {
+  //Find the login user
+  const { _id } = req.user;
+
+  //1. Get the path to img
+  const localPath = `public/images/profile/${req.file.filename}`;
+  //2.Upload to cloudinary
+  const imgUploaded = await cloudinaryUploadImg(localPath);
+
+  const foundUser = await User.findByIdAndUpdate(
+    _id,
+    {
+      profilePhoto: imgUploaded?.url,
+    },
+    { new: true }
+  );
+  res.json(foundUser);
+});
+
 module.exports = {
   registerUser,
   loginUser,
@@ -449,4 +472,5 @@ module.exports = {
   accountVerification,
   forgotPasswordToken,
   passwordReset,
+  profilePhotoUploadController,
 };
