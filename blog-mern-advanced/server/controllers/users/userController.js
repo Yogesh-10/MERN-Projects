@@ -1,9 +1,12 @@
 const crypto = require('crypto');
+const path = require('path');
+const fs = require('fs');
 const nodemailer = require('nodemailer');
 const expressAsyncHandler = require('express-async-handler');
 const generateToken = require('../../config/token/generateToken');
 const User = require('../../models/user/UserModel');
 const validateMongodbId = require('../../utils/validateMongodbID');
+const cloudinaryUploadImg = require('../../utils/cloudinary');
 
 /*
 @Author - Yogesh
@@ -432,16 +435,22 @@ const passwordReset = expressAsyncHandler(async (req, res) => {
   res.json(user);
 });
 
-//------------------------------
-//Profile photo upload
-//------------------------------
-
+/*
+@Author - Yogesh
+@Desc   - Upload Profile Photo to Cloudinary
+@Route  - PUT/api/users/profilephoto-upload
+@Access - Private
+*/
 const profilePhotoUploadController = expressAsyncHandler(async (req, res) => {
   //Find the login user
   const { _id } = req.user;
 
-  //1. Get the path to img
-  const localPath = `public/images/profile/${req.file.filename}`;
+  //1. Get the path to img from local server
+  const localPath = path.join(
+    __dirname,
+    `../../public/images/profile/${req.file.filename}`
+  );
+
   //2.Upload to cloudinary
   const imgUploaded = await cloudinaryUploadImg(localPath);
 
@@ -452,6 +461,12 @@ const profilePhotoUploadController = expressAsyncHandler(async (req, res) => {
     },
     { new: true }
   );
+
+  //removing file from local path after uploading to cloudinary
+  fs.unlinkSync(
+    path.join(__dirname, `../../public/images/profile/${req.file.filename}`)
+  );
+
   res.json(foundUser);
 });
 

@@ -8,9 +8,11 @@ cloudinary.config({
 
 const cloudinaryUploadImg = async (fileToUpload) => {
   try {
-    const data = await cloudinary.uploader.upload(fileToUpload, {
-      resource_type: 'auto',
+    const data = await cloudinary.v2.uploader.upload(fileToUpload, {
+      use_filename: true,
+      folder: 'MERN-Blog-Advanced',
     });
+
     return {
       url: data?.secure_url,
     };
