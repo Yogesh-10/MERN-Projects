@@ -129,7 +129,7 @@ userSchema.methods.createAccountVerificationToken = async function () {
   return verificationToken;
 };
 
-//Password reset/forget
+//Password reset/forgot
 userSchema.methods.createPasswordResetToken = async function () {
   const resetToken = crypto.randomBytes(32).toString('hex');
   this.passwordResetToken = crypto
