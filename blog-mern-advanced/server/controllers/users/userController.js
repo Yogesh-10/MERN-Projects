@@ -78,7 +78,7 @@ const getUsers = expressAsyncHandler(async (req, res) => {
 /*
 @Author - Yogesh
 @Desc   - Delete a user
-@Route  - POST/api/users/:id
+@Route  - DELETE/api/users/:id
 @Access - Private
 */
 const deleteUser = expressAsyncHandler(async (req, res) => {
@@ -115,7 +115,7 @@ const fetchUserDetails = expressAsyncHandler(async (req, res) => {
 
 /*
 @Author - Yogesh
-@Desc   - Fetch a user profile
+@Desc   - Fetch a user profile (along with posts)
 @Route  - GET/api/users/profile/:id
 @Access - Private
 */
@@ -124,7 +124,7 @@ const userProfile = expressAsyncHandler(async (req, res) => {
   validateMongodbId(id);
 
   try {
-    const myProfile = await User.findById(id);
+    const myProfile = await User.findById(id).populate('posts');
     res.json(myProfile);
   } catch (error) {
     res.json(error);
