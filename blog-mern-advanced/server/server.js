@@ -1,21 +1,25 @@
 const express = require('express');
 const dotenv = require('dotenv');
-dotenv.config();
 const dbConnect = require('./config/db/dbConnect');
 const userRoutes = require('./routes/users/userRoutes');
+const postRoutes = require('./routes/posts/postRoutes');
 const { errorHandler, notFound } = require('./middlewares/error/errorHandler');
 
+dotenv.config();
+
 const app = express();
+
 //DB
 dbConnect();
 
-//Middleware
+//Middlewares
 app.use(express.json());
 
-//Users route
+//Routes
 app.use('/api/users', userRoutes);
+app.use('/api/posts', postRoutes);
 
-//err handler
+//Err handlers
 app.use(notFound);
 app.use(errorHandler);
 
