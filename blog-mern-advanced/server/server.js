@@ -6,6 +6,7 @@ const postRoutes = require('./routes/posts/postRoutes');
 const commentRoutes = require('./routes/comments/commentRoutes');
 const emailMsgRoutes = require('./routes/emailMsg/emailMsgRoutes');
 const { errorHandler, notFound } = require('./middlewares/error/errorHandler');
+const categoryRoutes = require('./routes/category/categoryRoutes');
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/email', emailMsgRoutes);
+app.use('/api/categories', categoryRoutes);
 
 //Err handlers
 app.use(notFound);
