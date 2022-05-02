@@ -1,12 +1,13 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const cors = require('cors');
 const dbConnect = require('./config/db/dbConnect');
 const userRoutes = require('./routes/users/userRoutes');
 const postRoutes = require('./routes/posts/postRoutes');
 const commentRoutes = require('./routes/comments/commentRoutes');
 const emailMsgRoutes = require('./routes/emailMsg/emailMsgRoutes');
-const { errorHandler, notFound } = require('./middlewares/error/errorHandler');
 const categoryRoutes = require('./routes/category/categoryRoutes');
+const { errorHandler, notFound } = require('./middlewares/error/errorHandler');
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ const app = express();
 dbConnect();
 
 //Middlewares
+app.use(cors());
 app.use(express.json());
 
 //Routes
