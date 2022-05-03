@@ -1,5 +1,5 @@
 const express = require('express');
-const dotenv = require('dotenv');
+const dotenv = require('dotenv').config();
 const cors = require('cors');
 const dbConnect = require('./config/db/dbConnect');
 const userRoutes = require('./routes/users/userRoutes');
@@ -8,8 +8,6 @@ const commentRoutes = require('./routes/comments/commentRoutes');
 const emailMsgRoutes = require('./routes/emailMsg/emailMsgRoutes');
 const categoryRoutes = require('./routes/category/categoryRoutes');
 const { errorHandler, notFound } = require('./middlewares/error/errorHandler');
-
-dotenv.config();
 
 const app = express();
 

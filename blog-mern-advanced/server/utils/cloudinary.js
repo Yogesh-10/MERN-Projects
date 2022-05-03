@@ -1,4 +1,4 @@
-const cloudinary = require('cloudinary');
+const cloudinary = require('cloudinary').v2;
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -8,7 +8,7 @@ cloudinary.config({
 
 const cloudinaryUploadImg = async (fileToUpload) => {
   try {
-    const data = await cloudinary.v2.uploader.upload(fileToUpload, {
+    const data = await cloudinary.uploader.upload(fileToUpload, {
       use_filename: true,
       folder: 'MERN-Blog-Advanced',
     });
