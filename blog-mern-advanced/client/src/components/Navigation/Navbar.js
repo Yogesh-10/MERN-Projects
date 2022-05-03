@@ -14,9 +14,9 @@ const Navbar = () => {
   return (
     <>
       {isAdmin ? (
-        <AdminNavbar />
+        <AdminNavbar userAuth={userAuth} />
       ) : userAuth ? (
-        <PrivateNavbar />
+        <PrivateNavbar userAuth={userAuth} />
       ) : (
         <PublicNavbar />
       )}
