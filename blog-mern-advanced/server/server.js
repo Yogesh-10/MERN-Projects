@@ -25,7 +25,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/email', emailMsgRoutes);
-app.use('/api/categories', categoryRoutes);
+app.use('/api/category', categoryRoutes);
 
 //Err handlers
 app.use(notFound);
