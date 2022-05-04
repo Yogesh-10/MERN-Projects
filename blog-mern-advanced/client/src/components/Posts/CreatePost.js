@@ -37,6 +37,7 @@ export default function CreatePost() {
   //select store data
   const post = useSelector((state) => state?.post);
   const { isCreated, loading, appErr, serverErr } = post;
+
   //formik
   const formik = useFormik({
     initialValues: {
@@ -45,12 +46,11 @@ export default function CreatePost() {
       category: '',
       image: '',
     },
-
     onSubmit: (values) => {
       //dispath the action
-      console.log(values);
+
       const data = {
-        category: values?.category,
+        category: values?.category?.label,
         title: values?.title,
         description: values?.description,
         image: values?.image,
@@ -65,16 +65,16 @@ export default function CreatePost() {
 
   return (
     <>
-      <div className='min-h-screen bg-gray-800 flex flex-col justify-center py-12 sm:px-6 lg:px-8'>
+      <div className='min-h-screen bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8'>
         <div className='sm:mx-auto sm:w-full sm:max-w-md'>
-          <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-100'>
+          <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-300'>
             Create Post
           </h2>
 
           <div className='mt-2 text-center text-sm text-gray-600'>
-            <p className='font-medium text-white hover:text-red-500'>
-              Share your ideas to the world. Your post must be free from
-              profanity and follow community guidelines
+            <p className='font-medium text-green-600 hover:text-indigo-500'>
+              Share your ideas to the word. Your post must be free from
+              profanity
             </p>
           </div>
 
@@ -84,7 +84,6 @@ export default function CreatePost() {
             </p>
           ) : null}
         </div>
-
         <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'>
           <div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>
             <form onSubmit={formik.handleSubmit} className='space-y-6'>
@@ -108,11 +107,13 @@ export default function CreatePost() {
                     className='appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
                   />
                 </div>
+
                 {/* Err msg */}
                 <div className='text-red-500'>
                   {formik?.touched?.title && formik?.errors?.title}
                 </div>
               </div>
+
               {/* Category input goes here */}
               <label
                 htmlFor='password'
@@ -134,6 +135,7 @@ export default function CreatePost() {
                 >
                   Description
                 </label>
+
                 {/* Description */}
                 <textarea
                   value={formik.values.description}
@@ -144,6 +146,7 @@ export default function CreatePost() {
                   className='rounded-lg appearance-none block w-full py-3 px-3 text-base text-center leading-tight text-gray-600 bg-transparent focus:bg-transparent  border border-gray-200 focus:border-gray-500  focus:outline-none'
                   type='text'
                 ></textarea>
+
                 {/* Image component */}
                 <label
                   htmlFor='password'
@@ -153,10 +156,10 @@ export default function CreatePost() {
                 </label>
                 <Container className='container bg-gray-700'>
                   <Dropzone
-                    accept={{
-                      'image/png': ['.png', '.jpeg', '.jpg'],
-                    }}
                     onBlur={formik.handleBlur('image')}
+                    accept={{
+                      'image/png': ['.png', '.jpef', '.jpg'],
+                    }}
                     onDrop={(acceptedFiles) => {
                       formik.setFieldValue('image', acceptedFiles[0]);
                     }}
