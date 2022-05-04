@@ -62,10 +62,26 @@ const createPost = expressAsyncHandler(async (req, res) => {
 @Access - Private
 */
 const fetchPosts = expressAsyncHandler(async (req, res) => {
+  const hasCategory = req.query.category;
+
   try {
-    const posts = await Post.find({}).populate('user');
-    res.json(posts);
-  } catch (error) {}
+    if (hasCategory) {
+      const posts = await Post.find({ category: hasCategory })
+        .populate('user')
+        .populate('comments')
+        .sort('-createdAt');
+
+      res.json(posts);
+    } else {
+      const posts = await Post.find({})
+        .populate('user')
+        .populate('comments')
+        .sort('-createdAt');
+      res.json(posts);
+    }
+  } catch (error) {
+    res.json(error);
+  }
 });
 
 /*
@@ -81,7 +97,8 @@ const fetchPost = expressAsyncHandler(async (req, res) => {
     const post = await Post.findById(id)
       .populate('user')
       .populate('disLikes') //populating likes and dislikes is optional
-      .populate('likes');
+      .populate('likes')
+      .populate('comments');
 
     //update number of views
     await Post.findByIdAndUpdate(
