@@ -7,6 +7,7 @@ const generateToken = require('../../config/token/generateToken');
 const User = require('../../models/user/UserModel');
 const validateMongodbId = require('../../utils/validateMongodbID');
 const cloudinaryUploadImg = require('../../utils/cloudinary');
+const isBlockUser = require('../../utils/blockUser');
 
 /*
 @Author - Yogesh
@@ -68,7 +69,7 @@ const loginUser = expressAsyncHandler(async (req, res) => {
 */
 const getUsers = expressAsyncHandler(async (req, res) => {
   try {
-    const users = await User.find({});
+    const users = await User.find({}).populate('posts');
     res.json(users);
   } catch (error) {
     res.json(error);
@@ -123,9 +124,24 @@ const userProfile = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   validateMongodbId(id);
 
+  const loginUserId = req?.user?._id?.toString();
+
   try {
-    const myProfile = await User.findById(id).populate('posts');
-    res.json(myProfile);
+    const myProfile = await User.findById(id)
+      .populate('posts')
+      .populate('viewedBy');
+
+    const alreadyViewed = myProfile?.viewedBy?.find(
+      (user) => user?._id?.toString() === loginUserId
+    );
+
+    if (alreadyViewed) res.json(myProfile);
+    else {
+      const profile = await User.findByIdAndUpdate(myProfile?._id, {
+        $push: { viewedBy: loginUserId },
+      });
+      res.json(profile);
+    }
   } catch (error) {
     res.json(error);
   }
@@ -140,6 +156,8 @@ const userProfile = expressAsyncHandler(async (req, res) => {
 const updateUser = expressAsyncHandler(async (req, res) => {
   const { _id } = req?.user;
   validateMongodbId(_id);
+
+  isBlockUser(req?.user);
 
   const user = await User.findByIdAndUpdate(
     _id,
@@ -324,8 +342,8 @@ const generateVerificationToken = expressAsyncHandler(async (req, res) => {
 
     transporter.sendMail({
       from: '"Blog-MERN-Advanced" <blog-mern-advanced@gmail.com>', // sender address
-      to: 'allan.ankunding97@ethereal.email',
-      subject: 'My first Node js email sending',
+      to: user?.email,
+      subject: 'Account Verification',
       html: resetURL,
     });
 
@@ -351,7 +369,7 @@ const accountVerification = expressAsyncHandler(async (req, res) => {
   //find this user by token
   const userFound = await User.findOne({
     accountVerificationToken: hashedToken,
-    accountVerificationTokenExpires: { $gt: new Date.now() },
+    accountVerificationTokenExpires: { $gt: Date.now() },
   });
 
   if (!userFound) throw new Error('Token expired, try again later');
@@ -444,6 +462,8 @@ const passwordReset = expressAsyncHandler(async (req, res) => {
 const profilePhotoUploadController = expressAsyncHandler(async (req, res) => {
   //Find the login user
   const { _id } = req.user;
+
+  isBlockUser(req?.user);
 
   //1. Get the path to img from local server
   const localPath = path.join(

@@ -6,6 +6,7 @@ const User = require('../../models/user/UserModel');
 const Post = require('../../models/post/PostModel');
 const validateMongodbId = require('../../utils/validateMongodbID');
 const cloudinaryUploadImg = require('../../utils/cloudinary');
+const isBlockUser = require('../../utils/blockUser');
 
 /*
 @Author - Yogesh
@@ -15,6 +16,9 @@ const cloudinaryUploadImg = require('../../utils/cloudinary');
 */
 const createPost = expressAsyncHandler(async (req, res) => {
   const { _id } = req.user;
+
+  //block user
+  isBlockUser(req.user);
 
   //Check for bad words
   const filter = new Filter(); //Bad-Words npm Package
