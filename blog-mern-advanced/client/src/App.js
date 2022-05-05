@@ -11,7 +11,11 @@ import CreatePost from './components/Posts/CreatePost';
 import PostDetails from './components/Posts/PostDetails';
 import PostsList from './components/Posts/PostsList';
 import UpdatePost from './components/Posts/UpdatePost';
+import SendEmail from './components/Users/Emailing/SendEmail';
 import Login from './components/Users/Login/Login';
+import Profile from './components/Users/Profile/Profile';
+import UpdateProfileForm from './components/Users/Profile/UpdateProfileForm';
+import UploadProfilePhoto from './components/Users/Profile/UploadProfilePhoto';
 import Register from './components/Users/Register/Register';
 
 const App = () => {
@@ -26,9 +30,21 @@ const App = () => {
         />
         <PrivateProtectRoute
           exact
+          path='/upload-profile-photo'
+          component={UploadProfilePhoto}
+        />
+        <PrivateProtectRoute exact path='/send-mail' component={SendEmail} />
+        <PrivateProtectRoute
+          exact
+          path='/update-profile/:id'
+          component={UpdateProfileForm}
+        />
+        <PrivateProtectRoute
+          exact
           path='/update-post/:id'
           component={UpdatePost}
         />
+        <PrivateProtectRoute exact path='/profile/:id' component={Profile} />
         <PrivateProtectRoute exact path='/create-post' component={CreatePost} />
         <PrivateProtectRoute
           exact
