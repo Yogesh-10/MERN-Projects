@@ -197,7 +197,7 @@ export default function PostsList() {
                           <div className='ml-3'>
                             <p className='text-sm font-medium text-gray-900'>
                               <Link
-                                to={`/posts`}
+                                to={`/profile/${post?.user?._id}`}
                                 className='text-yellow-400 hover:underline '
                               >
                                 {post?.user?.firstName} {post?.user?.lastName}

@@ -11,12 +11,14 @@ import CreatePost from './components/Posts/CreatePost';
 import PostDetails from './components/Posts/PostDetails';
 import PostsList from './components/Posts/PostsList';
 import UpdatePost from './components/Posts/UpdatePost';
+import AccountVerified from './components/Users/AccountVerification/AccountVerified';
 import SendEmail from './components/Users/Emailing/SendEmail';
 import Login from './components/Users/Login/Login';
 import Profile from './components/Users/Profile/Profile';
 import UpdateProfileForm from './components/Users/Profile/UpdateProfileForm';
 import UploadProfilePhoto from './components/Users/Profile/UploadProfilePhoto';
 import Register from './components/Users/Register/Register';
+import UsersList from './components/Users/UsersList/UsersList';
 
 const App = () => {
   return (
@@ -28,10 +30,17 @@ const App = () => {
           path='/update-category/:id'
           component={UpdateCategory}
         />
+        <AdminRoute exact path='/users' component={UsersList} />
         <PrivateProtectRoute
           exact
           path='/upload-profile-photo'
           component={UploadProfilePhoto}
+        />
+
+        <PrivateProtectRoute
+          exact
+          path='/verify-account/:token'
+          component={AccountVerified}
         />
         <PrivateProtectRoute exact path='/send-mail' component={SendEmail} />
         <PrivateProtectRoute
