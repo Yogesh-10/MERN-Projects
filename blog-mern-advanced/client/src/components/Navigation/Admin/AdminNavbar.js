@@ -30,9 +30,11 @@ function classNames(...classes) {
 const AdminNavbar = ({ userAuth }) => {
   //Navigation
   const userNavigation = [
-    { name: 'Your Profile', href: `/profile` },
+    { name: 'Your Profile', href: `/profile/${userAuth?._id}` },
     { name: 'Change your password', href: '/update-password' },
+    { name: 'Settings', href: '/update-password' },
   ];
+
   //logout
   const dispatch = useDispatch();
   return (
@@ -60,8 +62,8 @@ const AdminNavbar = ({ userAuth }) => {
                 <div className='hidden md:ml-6 md:flex md:items-center md:space-x-4'>
                   {navigation.map((item) => (
                     <Link
-                      key={item.name}
                       to={item.href}
+                      key={item.name}
                       className={classNames(
                         item.current
                           ? 'bg-gray-900 text-white'
@@ -134,15 +136,15 @@ const AdminNavbar = ({ userAuth }) => {
                             {userNavigation.map((item) => (
                               <Menu.Item key={item.name}>
                                 {({ active }) => (
-                                  <a
-                                    href={item.href}
+                                  <Link
+                                    to={item.href}
                                     className={classNames(
                                       active ? 'bg-gray-100' : '',
                                       'block px-4 py-2 text-sm text-gray-700'
                                     )}
                                   >
                                     {item.name}
-                                  </a>
+                                  </Link>
                                 )}
                               </Menu.Item>
                             ))}
@@ -195,13 +197,13 @@ const AdminNavbar = ({ userAuth }) => {
               </div>
               <div className='mt-3 px-2 space-y-1 sm:px-3'>
                 {userNavigation.map((item) => (
-                  <a
+                  <Link
+                    to={item.href}
                     key={item.name}
-                    href={item.href}
                     className='block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700'
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>

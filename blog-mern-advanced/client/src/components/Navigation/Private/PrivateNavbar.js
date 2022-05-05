@@ -23,15 +23,14 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-const PrivateNavbar = ({ userAuth }) => {
+const PrivateNavbar = ({ isLogin }) => {
   const userNavigation = [
-    { name: 'Your Profile', href: `/profile` },
+    { name: 'Your Profile', href: `/profile/${isLogin?._id}` },
     { name: 'Change your password', href: '/update-password' },
   ];
 
   //logout
   const dispatch = useDispatch();
-
   return (
     <Disclosure as='nav' className='bg-gray-800'>
       {({ open }) => (
@@ -107,7 +106,7 @@ const PrivateNavbar = ({ userAuth }) => {
                             <span className='sr-only'>Open user menu</span>
                             <img
                               className='h-8 w-8 rounded-full'
-                              src={userAuth?.profilePhoto}
+                              src={isLogin?.profilePhoto}
                               alt=''
                             />
                           </Menu.Button>
@@ -175,7 +174,7 @@ const PrivateNavbar = ({ userAuth }) => {
                 <div className='flex-shrink-0'>
                   <img
                     className='h-10 w-10 rounded-full'
-                    src={userAuth?.profilePhoto}
+                    // src={isLogin.profilePhoto}
                     alt=''
                   />
                 </div>
