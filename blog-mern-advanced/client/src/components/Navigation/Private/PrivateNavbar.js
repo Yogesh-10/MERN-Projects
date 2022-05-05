@@ -16,16 +16,15 @@ const navigation = [
   { name: 'Home', href: '/', current: true },
   { name: 'Create', href: '/create-post', current: false },
   { name: 'Posts', href: '/posts', current: false },
-  { name: 'Authors', href: '/users', current: false },
 ];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-const PrivateNavbar = ({ isLogin }) => {
+const PrivateNavbar = ({ userAuth }) => {
   const userNavigation = [
-    { name: 'Your Profile', href: `/profile/${isLogin?._id}` },
+    { name: 'Your Profile', href: `/profile/${userAuth?._id}` },
     { name: 'Change your password', href: '/update-password' },
   ];
 
@@ -106,7 +105,7 @@ const PrivateNavbar = ({ isLogin }) => {
                             <span className='sr-only'>Open user menu</span>
                             <img
                               className='h-8 w-8 rounded-full'
-                              src={isLogin?.profilePhoto}
+                              src={userAuth?.profilePhoto}
                               alt=''
                             />
                           </Menu.Button>
@@ -128,15 +127,15 @@ const PrivateNavbar = ({ isLogin }) => {
                             {userNavigation.map((item) => (
                               <Menu.Item key={item.name}>
                                 {({ active }) => (
-                                  <a
-                                    href={item.href}
+                                  <Link
+                                    to={item.href}
                                     className={classNames(
                                       active ? 'bg-gray-100' : '',
                                       'block px-4 py-2 text-sm text-gray-700'
                                     )}
                                   >
                                     {item.name}
-                                  </a>
+                                  </Link>
                                 )}
                               </Menu.Item>
                             ))}
@@ -153,9 +152,9 @@ const PrivateNavbar = ({ isLogin }) => {
           <Disclosure.Panel className='md:hidden'>
             <div className='px-2 pt-2 pb-3 space-y-1 sm:px-3'>
               {navigation.map((item) => (
-                <a
+                <Link
                   key={item.name}
-                  href={item.href}
+                  to={item.href}
                   className={classNames(
                     item.current
                       ? 'bg-gray-900 text-white'
@@ -165,7 +164,7 @@ const PrivateNavbar = ({ isLogin }) => {
                   aria-current={item.current ? 'page' : undefined}
                 >
                   {item.name}
-                </a>
+                </Link>
               ))}
             </div>
             {/* Mobile */}
@@ -193,13 +192,13 @@ const PrivateNavbar = ({ isLogin }) => {
               </div>
               <div className='mt-3 px-2 space-y-1 sm:px-3'>
                 {userNavigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
-                    href={item.href}
+                    to={item.href}
                     className='block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700'
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>
