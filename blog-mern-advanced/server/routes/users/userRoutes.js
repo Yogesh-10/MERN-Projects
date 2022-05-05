@@ -53,7 +53,7 @@ userRoutes.put('/follow', authMiddleware, followUser);
 userRoutes.put('/unfollow', authMiddleware, unfollowUser);
 
 userRoutes.get('/:id', fetchUserDetails);
-userRoutes.put('/:id', authMiddleware, updateUser);
+userRoutes.put('/', authMiddleware, updateUser);
 userRoutes.delete('/:id', authMiddleware, deleteUser);
 userRoutes.get('/', authMiddleware, getUsers);
 
