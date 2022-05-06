@@ -205,11 +205,15 @@ const postSlice = createSlice({
       state.isCreated = true;
     });
     builder.addCase(createpostAction.fulfilled, (state, action) => {
-      state.postCreated = action?.payload;
       state.loading = false;
       state.isCreated = false;
       state.appErr = undefined;
       state.serverErr = undefined;
+    });
+    builder.addCase(createpostAction.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
     });
 
     //Update post
