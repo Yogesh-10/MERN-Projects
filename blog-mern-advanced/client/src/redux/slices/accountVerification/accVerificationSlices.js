@@ -24,7 +24,6 @@ export const accVerificationSendTokenAction = createAsyncThunk(
         {},
         config
       );
-      console.log(data);
       return data;
     } catch (error) {
       if (!error?.response) {
@@ -51,7 +50,7 @@ export const verifyAccountAction = createAsyncThunk(
     try {
       const { data } = await axios.put(
         `${baseUrl}/api/users/verify-account`,
-        { token },
+        { verificationToken: token },
         config
       );
       //dispatch

@@ -344,7 +344,6 @@ const usersSlices = createSlice({
       state.serverErr = undefined;
     });
     builder.addCase(registerUserAction.rejected, (state, action) => {
-      console.log(action.payload);
       state.loading = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
@@ -363,7 +362,6 @@ const usersSlices = createSlice({
       state.serverErr = undefined;
     });
     builder.addCase(fetchUserDetailsAction.rejected, (state, action) => {
-      console.log(action.payload);
       state.loading = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
@@ -382,7 +380,6 @@ const usersSlices = createSlice({
       state.serverErr = undefined;
     });
     builder.addCase(blockUserAction.rejected, (state, action) => {
-      console.log(action.payload);
       state.loading = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
@@ -417,7 +414,6 @@ const usersSlices = createSlice({
       state.serverErr = undefined;
     });
     builder.addCase(fetchUsersAction.rejected, (state, action) => {
-      console.log(action.payload);
       state.loading = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
@@ -514,7 +510,6 @@ const usersSlices = createSlice({
       state.serverErr = undefined;
     });
     builder.addCase(updateUserAction.rejected, (state, action) => {
-      console.log(action.payload);
       state.loading = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
