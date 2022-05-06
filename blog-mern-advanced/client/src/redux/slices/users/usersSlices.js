@@ -9,6 +9,7 @@ const userLoginFromStorage = localStorage.getItem('userInfo')
 
 //Redirect action
 const resetUserAction = createAction('user/profile/reset');
+const resetPasswordAction = createAction('password/reset');
 
 //register action
 export const registerUserAction = createAsyncThunk(
@@ -323,6 +324,91 @@ export const uploadProfilePhototAction = createAsyncThunk(
   }
 );
 
+//Update Password
+export const updatePasswordAction = createAsyncThunk(
+  'password/update',
+  async (password, { rejectWithValue, getState, dispatch }) => {
+    //get user token
+    const user = getState()?.users;
+    const { userAuth } = user;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+    //http call
+    try {
+      const { data } = await axios.put(
+        `${baseUrl}/api/users/password`,
+        {
+          password,
+        },
+        config
+      );
+      //dispatch
+      dispatch(resetPasswordAction());
+      return data;
+    } catch (error) {
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+//Password reset token generator
+export const passwordResetTokenAction = createAsyncThunk(
+  'password/token',
+  async (email, { rejectWithValue, getState, dispatch }) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    //http call
+    try {
+      const { data } = await axios.post(
+        `${baseUrl}/api/users/forgot-password-token`,
+        { email },
+        config
+      );
+      return data;
+    } catch (error) {
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+//Password reset
+export const passwordResetAction = createAsyncThunk(
+  'password/reset',
+  async (user, { rejectWithValue, getState, dispatch }) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    //http call
+    try {
+      const { data } = await axios.put(
+        `${baseUrl}/api/users/reset-password`,
+        { password: user?.password, token: user?.token },
+        config
+      );
+      return data;
+    } catch (error) {
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 //slices
 const usersSlices = createSlice({
   name: 'users',
@@ -547,6 +633,65 @@ const usersSlices = createSlice({
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
       state.loading = false;
+    });
+
+    //Password reset token generator
+    builder.addCase(passwordResetTokenAction.pending, (state, action) => {
+      state.loading = true;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(passwordResetTokenAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.passwordToken = action?.payload;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(passwordResetTokenAction.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
+    });
+
+    //update password
+    builder.addCase(updatePasswordAction.pending, (state, action) => {
+      state.loading = true;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(resetPasswordAction, (state, action) => {
+      state.isPasswordUpdated = true;
+    });
+    builder.addCase(updatePasswordAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.passwordUpdated = action?.payload;
+      state.isPasswordUpdated = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(updatePasswordAction.rejected, (state, action) => {
+      console.log(action.payload);
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
+    });
+
+    //Password reset
+    builder.addCase(passwordResetAction.pending, (state, action) => {
+      state.loading = true;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(passwordResetAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.passwordReset = action?.payload;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(passwordResetAction.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
     });
   },
 });
