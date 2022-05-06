@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFormik } from 'formik';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import { loginUserAction } from '../../../redux/slices/users/usersSlices';
@@ -138,6 +138,14 @@ const Login = () => {
                       </button>
                     )}
                   </form>
+                  <div className='p-2'>
+                    <Link
+                      to='/password-reset-token'
+                      className='font-medium text-indigo-600 hover:text-indigo-500'
+                    >
+                      Forgot Password ?
+                    </Link>
+                  </div>
                 </div>
               </div>
               <div className='w-full lg:w-3/5 px-4 mb-16 lg:mb-0 order-first lg:order-last'>
